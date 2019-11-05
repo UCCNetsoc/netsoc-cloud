@@ -83,7 +83,8 @@ func (c *CloudCIXService) GetVMs() ([]models.VM, error) {
 	for _, i := range body.Content {
 		vms = append(vms, models.VM{
 			ID:        i.ID,
-			ServerID:  i.ServerID,
+			Username:  "undefined",
+			Project:   "undefined",
 			Name:      i.Name,
 			RAM:       i.RAM,
 			CPU:       i.CPU,

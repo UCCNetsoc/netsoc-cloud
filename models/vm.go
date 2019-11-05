@@ -3,7 +3,8 @@ package models
 // VM represents a Netsoc VM owned by a User
 type VM struct {
 	ID        int    `json:"id"`
-	ServerID  int    `json:"server_id"`
+	Username  string `json:"username"`
+	Project   string `json:"project"`
 	Name      string `json:"name"`
 	RAM       int    `json:"ram"`
 	CPU       int    `json:"cpu"`

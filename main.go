@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"netsoc/cloud/api"
 	"netsoc/cloud/config"
+	"netsoc/cloud/services"
 	"netsoc/cloud/services/cloudcix"
 
 	"github.com/Strum355/log"
@@ -32,6 +33,16 @@ func main() {
 		log.WithError(err).Error("Could not initialise cloud service")
 		return
 	}
+
+	// Initialise Consul service
+	consul_service := services.ConsulService{}
+
+	// Register with Consul
+	consul_service.Setup()
+	consul_service.GetSharedSecret()
+	log.WithFields(log.Fields{
+		"token": viper.GetString("cloud.http.token"),
+	}).Info("Token")
 
 	// Initialise router
 	log.Info("Initialising chi router")
