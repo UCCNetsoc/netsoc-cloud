@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
+	"netsoc/cloud/api"
 	"netsoc/cloud/config"
 	"netsoc/cloud/services/cloudcix"
-	"os"
 
 	"github.com/Strum355/log"
+	"github.com/go-chi/chi"
 	"github.com/spf13/viper"
 )
 
@@ -26,24 +29,21 @@ func main() {
 	cloud_service := cloudcix.CloudCIXService{}
 	cloud_service.CreateService()
 
-	// Fetch projects
-	projects, err := cloud_service.GetProjects()
-	if err != nil {
-		log.WithError(err).Error("Could not fetch projects")
-		os.Exit(1)
-	}
-	log.WithFields(log.Fields{
-		"num_projects": len(projects),
-	}).Info("Projects fetched.")
+	// Initialise router
+	log.Info("Initialising chi router")
+	r := chi.NewRouter()
 
-	// Fetch VMs
-	vms, err := cloud_service.GetVMs()
-	if err != nil {
-		log.WithError(err).Error("Could not fetch vms")
-		os.Exit(1)
-	}
-	log.WithFields(log.Fields{
-		"num_vms": len(vms),
-	}).Info("VMs fetched.")
+	// Initialise API
+	log.Info("Registering API endpoints")
+	api := api.API{CloudService: cloud_service}
+	api.Register(r)
 
+	// Listen and serve HTTP
+	log.WithFields(log.Fields{
+		"port": viper.GetInt("cloud.http.port"),
+	}).Info("Serving HTTP")
+	err := http.ListenAndServe(":"+fmt.Sprint(viper.GetInt("cloud.http.port")), r)
+	if err != nil {
+		log.WithError(err).Error("Error serving HTTP")
+	}
 }

@@ -1,4 +1,4 @@
-package models
+package cloudcix_models
 
 type Project struct {
 	ID              int    `json:"idProject"`

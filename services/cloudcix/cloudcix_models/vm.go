@@ -1,4 +1,4 @@
-package models
+package cloudcix_models
 
 type VM struct {
 	ID        int    `json:"idVM"`
