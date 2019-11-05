@@ -27,7 +27,11 @@ func main() {
 
 	// Initialise CloudCIX service
 	cloud_service := cloudcix.CloudCIXService{}
-	cloud_service.CreateService()
+	err := cloud_service.CreateService()
+	if err != nil {
+		log.WithError(err).Error("Could not initialise cloud service")
+		return
+	}
 
 	// Initialise router
 	log.Info("Initialising chi router")
@@ -42,7 +46,7 @@ func main() {
 	log.WithFields(log.Fields{
 		"port": viper.GetInt("cloud.http.port"),
 	}).Info("Serving HTTP")
-	err := http.ListenAndServe(":"+fmt.Sprint(viper.GetInt("cloud.http.port")), r)
+	err = http.ListenAndServe(":"+fmt.Sprint(viper.GetInt("cloud.http.port")), r)
 	if err != nil {
 		log.WithError(err).Error("Error serving HTTP")
 	}
