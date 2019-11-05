@@ -35,15 +35,15 @@ func (a *API) Register(r chi.Router) {
 			log.WithError(err).Error("Could not fetch VMs.")
 			return
 		}
-		user_vms := make([]models.VM, 0)
+		userVms := make([]models.VM, 0)
 		for _, i := range vms {
 			if i.Username == username {
-				user_vms = append(user_vms, i)
+				userVms = append(userVms, i)
 			}
 		}
 		response := struct {
 			Content []models.VM `json:"content"`
-		}{user_vms}
+		}{userVms}
 
 		json.NewEncoder(w).Encode(response)
 	})

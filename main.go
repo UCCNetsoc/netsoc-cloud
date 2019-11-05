@@ -27,19 +27,19 @@ func main() {
 	config.PrintSettings()
 
 	// Initialise CloudCIX service
-	cloud_service := cloudcix.CloudCIXService{}
-	err := cloud_service.CreateService()
+	cloudService := cloudcix.CloudCIXService{}
+	err := cloudService.CreateService()
 	if err != nil {
 		log.WithError(err).Error("Could not initialise cloud service")
 		return
 	}
 
 	// Initialise Consul service
-	consul_service := services.ConsulService{}
+	consulService := services.ConsulService{}
 
 	// Register with Consul
-	consul_service.Setup()
-	consul_service.GetSharedSecret()
+	consulService.Setup()
+	consulService.GetSharedSecret()
 	log.WithFields(log.Fields{
 		"token": viper.GetString("cloud.http.token"),
 	}).Info("Token")
@@ -50,7 +50,7 @@ func main() {
 
 	// Initialise API
 	log.Info("Registering API endpoints")
-	api := api.API{CloudService: cloud_service}
+	api := api.API{CloudService: cloudService}
 	api.Register(r)
 
 	// Listen and serve HTTP
